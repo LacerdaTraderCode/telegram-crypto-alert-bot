@@ -9,6 +9,7 @@
 [![Binance](https://img.shields.io/badge/Binance-FCD535?logo=binance&logoColor=black)](https://binance-docs.github.io/apidocs/)
 [![Licença](https://img.shields.io/badge/Licen%C3%A7a-MIT-orange)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot/blob/main/LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-LacerdaTraderCode-181717?logo=github)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot)
+[![Não Oficial](https://img.shields.io/badge/Bot-N%C3%A3o%20Oficial-red)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot)
 
 </div>
 
@@ -17,6 +18,8 @@
 ## 📌 Sobre o projeto
 
 Bot para Telegram que monitora preços de criptomoedas em tempo real via **API da Binance** e envia alertas personalizados quando os preços atingem os valores configurados pelo usuário. Construído com `python-telegram-bot` e arquitetura totalmente assíncrona.
+
+> ⚠️ Projeto **não oficial** — sem vínculo com o Telegram ou com a Binance. Utiliza a API pública da Binance e a API de bots do Telegram de forma independente.
 
 ### Funcionalidades
 

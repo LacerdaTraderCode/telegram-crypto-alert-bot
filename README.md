@@ -2,56 +2,56 @@
 
 # 🤖 Telegram Crypto Alert Bot
 
-**Bot para Telegram que monitora preços de criptomoedas e envia alertas em tempo real**
+**A Telegram bot that monitors cryptocurrency prices and sends real-time alerts**
 
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?logo=telegram&logoColor=white)](https://core.telegram.org/bots)
 [![Binance](https://img.shields.io/badge/Binance-FCD535?logo=binance&logoColor=black)](https://binance-docs.github.io/apidocs/)
-[![Licença](https://img.shields.io/badge/Licen%C3%A7a-MIT-orange)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-orange)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot/blob/main/LICENSE)
 [![GitHub](https://img.shields.io/badge/GitHub-LacerdaTraderCode-181717?logo=github)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot)
-[![Não Oficial](https://img.shields.io/badge/Bot-N%C3%A3o%20Oficial-red)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot)
+[![Unofficial](https://img.shields.io/badge/Bot-Unofficial-red)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot)
 
 </div>
 
 ---
 
-## 📌 Sobre o projeto
+## 📌 About the Project
 
-Bot para Telegram que monitora preços de criptomoedas em tempo real via **API da Binance** e envia alertas personalizados quando os preços atingem os valores configurados pelo usuário. Construído com `python-telegram-bot` e arquitetura totalmente assíncrona.
+A Telegram bot that monitors cryptocurrency prices in real time via the **Binance API** and sends customized alerts when prices hit the thresholds set by the user. Built with `python-telegram-bot` on a fully asynchronous architecture.
 
-> ⚠️ Projeto **não oficial** — sem vínculo com o Telegram ou com a Binance. Utiliza a API pública da Binance e a API de bots do Telegram de forma independente.
+> ⚠️ **Unofficial** project — not affiliated with Telegram or Binance. It independently uses Binance's public API and Telegram's bot API.
 
-### Funcionalidades
+### Features
 
-- ✅ **Consulta de preços em tempo real** de qualquer par cripto (BTC/USDT, ETH/USDT, etc.)
-- ✅ **Alertas por preço acima ou abaixo** de um valor definido pelo usuário
-- ✅ **Lista de alertas ativos** por usuário
-- ✅ **Monitoramento assíncrono** em background
-- ✅ **Persistência em SQLite** — alertas sobrevivem a restarts
-- ✅ **Rate limit** automático respeitando os limites da API Binance
-
----
-
-## 🛠️ Tecnologias
-
-- **python-telegram-bot** — Framework oficial para bots no Telegram
-- **aiohttp** — Cliente HTTP assíncrono para a API Binance
-- **SQLAlchemy** — ORM para persistência dos alertas
-- **asyncio** — Programação assíncrona nativa
-- **APScheduler** — Agendamento de jobs periódicos de monitoramento
+- ✅ **Real-time price lookup** for any crypto pair (BTC/USDT, ETH/USDT, etc.)
+- ✅ **Above/below price alerts** with a user-defined value
+- ✅ **List of active alerts** per user
+- ✅ **Asynchronous background monitoring**
+- ✅ **SQLite persistence** — alerts survive restarts
+- ✅ **Automatic rate limiting** respecting Binance API limits
 
 ---
 
-## 📁 Estrutura
+## 🛠️ Technologies
+
+- **python-telegram-bot** — Official framework for Telegram bots
+- **aiohttp** — Asynchronous HTTP client for the Binance API
+- **SQLAlchemy** — ORM for alert persistence
+- **asyncio** — Native asynchronous programming
+- **APScheduler** — Scheduling of periodic monitoring jobs
+
+---
+
+## 📁 Structure
 
 ```
 telegram-crypto-alert-bot/
 ├── bot/
-│   ├── main.py              # Ponto de entrada
-│   ├── handlers.py          # Handlers dos comandos
-│   ├── binance_client.py    # Cliente da API Binance
-│   ├── database.py          # Persistência de alertas
-│   └── monitor.py           # Job de monitoramento em background
+│   ├── main.py              # Entry point
+│   ├── handlers.py          # Command handlers
+│   ├── binance_client.py    # Binance API client
+│   ├── database.py          # Alert persistence
+│   └── monitor.py           # Background monitoring job
 ├── requirements.txt
 ├── .env.example
 └── README.md
@@ -59,14 +59,14 @@ telegram-crypto-alert-bot/
 
 ---
 
-## 📦 Instalação
+## 📦 Installation
 
-### Pré-requisitos
+### Prerequisites
 
 - Python 3.11+
-- Token de bot do Telegram — [crie via @BotFather](https://t.me/BotFather)
+- Telegram bot token — [create one via @BotFather](https://t.me/BotFather)
 
-### Passos
+### Steps
 
 ```bash
 git clone https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot.git
@@ -79,70 +79,70 @@ source venv/bin/activate      # Linux/Mac
 pip install -r requirements.txt
 
 cp .env.example .env
-# Edite .env e adicione seu TELEGRAM_BOT_TOKEN
+# Edit .env and add your TELEGRAM_BOT_TOKEN
 
 python -m bot.main
 ```
 
 ---
 
-## 💬 Comandos disponíveis
+## 💬 Available Commands
 
-| Comando | Descrição | Exemplo |
+| Command | Description | Example |
 |---------|-----------|---------|
-| `/start` | Mensagem de boas-vindas | `/start` |
-| `/help` | Lista todos os comandos | `/help` |
-| `/price <par>` | Preço atual do par | `/price BTCUSDT` |
-| `/alert <par> <above\|below> <valor>` | Cria alerta | `/alert BTCUSDT above 70000` |
-| `/alerts` | Lista alertas ativos | `/alerts` |
-| `/remove <id>` | Remove alerta pelo ID | `/remove 3` |
+| `/start` | Welcome message | `/start` |
+| `/help` | Lists all commands | `/help` |
+| `/price <pair>` | Current price of the pair | `/price BTCUSDT` |
+| `/alert <pair> <above\|below> <value>` | Creates an alert | `/alert BTCUSDT above 70000` |
+| `/alerts` | Lists active alerts | `/alerts` |
+| `/remove <id>` | Removes an alert by ID | `/remove 3` |
 
 ---
 
-## 🖼️ Exemplo de uso
+## 🖼️ Usage Example
 
 ```
-Usuário: /price BTCUSDT
-Bot: 💰 BTCUSDT: $67.432,50 (+2,15% em 24h)
+User: /price BTCUSDT
+Bot: 💰 BTCUSDT: $67,432.50 (+2.15% in 24h)
 
-Usuário: /alert BTCUSDT above 70000
-Bot: ✅ Alerta criado! Aviso quando BTCUSDT passar de $70.000
+User: /alert BTCUSDT above 70000
+Bot: ✅ Alert created! I'll notify you when BTCUSDT passes $70,000
 
-[quando o preço sobe...]
-Bot: 🚨 ALERTA! BTCUSDT atingiu $70.150 — sua meta era $70.000
+[when the price rises...]
+Bot: 🚨 ALERT! BTCUSDT reached $70,150 — your target was $70,000
 ```
 
 ---
 
-## 🔒 Segurança
+## 🔒 Security
 
-- ✅ Token do bot nunca é commitado (fica em `.env`)
-- ✅ Cada usuário só vê seus próprios alertas
-- ✅ Rate limiting previne abuso da API Binance
-- ✅ Tratamento de erros em todas as operações assíncronas
+- ✅ Bot token is never committed (kept in `.env`)
+- ✅ Each user only sees their own alerts
+- ✅ Rate limiting prevents Binance API abuse
+- ✅ Error handling on all asynchronous operations
 
 ---
 
-## 🚀 Deploy 24/7
+## 🚀 24/7 Deploy
 
 - **VPS** — DigitalOcean, Linode, Contabo
-- **Railway** ou **Render** — gratuito até certo limite
-- **Raspberry Pi** — ideal para uso pessoal
+- **Railway** or **Render** — free tier available
+- **Raspberry Pi** — ideal for personal use
 
 ---
 
-## ✅ Requisitos
+## ✅ Requirements
 
-- Python **3.11** ou superior
-- Token de bot do Telegram
+- Python **3.11** or higher
+- Telegram bot token
 
 ---
 
-## 👤 Autor
+## 👤 Author
 
 <div align="center">
 
-**Wagner Lacerda** — Python Backend Developer | APIs REST • Automação • Data Engineering
+**Wagner Lacerda** — Senior Software Engineer | Python, Backend, AI Apps, Automation & Systems
 
 [![GitHub](https://img.shields.io/badge/GitHub-LacerdaTraderCode-181717?logo=github&logoColor=white)](https://github.com/LacerdaTraderCode)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Wagner%20Lacerda-0077B5?logo=linkedin&logoColor=white)](https://linkedin.com/in/wagner-lacerda-da-silva-958b9481)
@@ -150,12 +150,12 @@ Bot: 🚨 ALERTA! BTCUSDT atingiu $70.150 — sua meta era $70.000
 [![Telegram](https://img.shields.io/badge/Telegram-LacerdaTraderCode-26A5E4?logo=telegram&logoColor=white)](https://t.me/LacerdaTraderCode)
 [![Telegram Bots](https://img.shields.io/badge/Telegram-Bots-26A5E4?logo=telegram&logoColor=white)](https://t.me/LacerdaTraderCode_bots)
 
-📍 Rio Grande do Sul, Brasil
+📍 Rio Grande do Sul, Brazil
 
 </div>
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais detalhes.
+Distributed under the MIT license. See [LICENSE](LICENSE) for more details.

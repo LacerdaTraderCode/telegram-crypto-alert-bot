@@ -4,6 +4,7 @@
 
 **A Telegram bot that monitors cryptocurrency prices and sends real-time alerts**
 
+[![CI](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?logo=telegram&logoColor=white)](https://core.telegram.org/bots)
 [![Binance](https://img.shields.io/badge/Binance-FCD535?logo=binance&logoColor=black)](https://binance-docs.github.io/apidocs/)

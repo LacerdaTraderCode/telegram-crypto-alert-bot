@@ -53,10 +53,25 @@ telegram-crypto-alert-bot/
 │   ├── binance_client.py    # Binance API client
 │   ├── database.py          # Alert persistence
 │   └── monitor.py           # Background monitoring job
+├── tests/
+├── .github/workflows/ci.yml
 ├── requirements.txt
+├── requirements-dev.txt
 ├── .env.example
 └── README.md
 ```
+
+---
+
+## 🧪 Development
+
+```bash
+pip install -r requirements-dev.txt
+ruff check . && ruff format --check .
+pytest -v
+```
+
+Tests mock the Binance API and Telegram objects and run against an isolated in-memory SQLite database. The same checks run on every push and pull request via GitHub Actions.
 
 ---
 

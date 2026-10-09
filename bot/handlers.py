@@ -116,7 +116,8 @@ async def alerts_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = "*📋 Your active alerts:*\n\n"
     for alert in user_alerts:
         arrow = direction_arrow(alert.direction)
-        text += f"`{alert.id}` {arrow} {alert.symbol} {alert.direction} `${alert.target_price:,.2f}`\n"
+        target = f"${alert.target_price:,.2f}"
+        text += f"`{alert.id}` {arrow} {alert.symbol} {alert.direction} `{target}`\n"
 
     text += "\n💡 Use /remove <id> to remove an alert"
     await update.message.reply_text(text, parse_mode="Markdown")

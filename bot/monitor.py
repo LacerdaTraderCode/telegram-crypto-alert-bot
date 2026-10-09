@@ -42,7 +42,7 @@ async def check_alerts(bot):
             await bot.send_message(
                 chat_id=alert.user_id,
                 text=(
-                    f"🚨 *ALERT TRIGGERED!*\n\n"
+                    "🚨 *ALERT TRIGGERED!*\n\n"
                     f"{direction_arrow(alert.direction)} *{alert.symbol}* "
                     f"reached `${current_price:,.4f}`\n"
                     f"Your target was: `${alert.target_price:,.4f}` ({alert.direction})"

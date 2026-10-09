@@ -96,7 +96,7 @@ async def alert_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     alert = add_alert(update.effective_user.id, symbol, direction, target_price)
 
     await update.message.reply_text(
-        f"✅ *Alert created!*\n\n"
+        "✅ *Alert created!*\n\n"
         f"ID: `{alert.id}`\n"
         f"{direction_arrow(direction)} {alert.symbol} {direction} `${target_price:,.2f}`\n"
         f"Current price: `${data['price']:,.2f}`",

@@ -1,11 +1,10 @@
-"""
-Gerenciamento de persistência dos alertas em SQLite.
-"""
-from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, DateTime
+import os
+
+from sqlalchemy import Boolean, Column, DateTime, Float, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.sql import func
 
-DATABASE_URL = "sqlite:///./alerts.db"
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./alerts.db")
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(bind=engine)
@@ -18,7 +17,7 @@ class Alert(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, index=True, nullable=False)
     symbol = Column(String, nullable=False)
-    direction = Column(String, nullable=False)  # 'above' ou 'below'
+    direction = Column(String, nullable=False)
     target_price = Column(Float, nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -26,12 +25,10 @@ class Alert(Base):
 
 
 def init_db():
-    """Cria as tabelas no banco."""
     Base.metadata.create_all(bind=engine)
 
 
 def add_alert(user_id: int, symbol: str, direction: str, target_price: float) -> Alert:
-    """Cria um novo alerta."""
     with SessionLocal() as db:
         alert = Alert(
             user_id=user_id,
@@ -45,30 +42,19 @@ def add_alert(user_id: int, symbol: str, direction: str, target_price: float) ->
         return alert
 
 
-def list_user_alerts(user_id: int):
-    """Lista alertas ativos de um usuário."""
+def list_user_alerts(user_id: int) -> list[Alert]:
     with SessionLocal() as db:
-        return (
-            db.query(Alert)
-            .filter(Alert.user_id == user_id, Alert.is_active == True)
-            .all()
-        )
+        return db.query(Alert).filter(Alert.user_id == user_id, Alert.is_active.is_(True)).all()
 
 
-def list_all_active_alerts():
-    """Lista todos os alertas ativos (usado pelo monitor)."""
+def list_all_active_alerts() -> list[Alert]:
     with SessionLocal() as db:
-        return db.query(Alert).filter(Alert.is_active == True).all()
+        return db.query(Alert).filter(Alert.is_active.is_(True)).all()
 
 
 def deactivate_alert(alert_id: int, user_id: int) -> bool:
-    """Desativa um alerta (só se pertencer ao usuário)."""
     with SessionLocal() as db:
-        alert = (
-            db.query(Alert)
-            .filter(Alert.id == alert_id, Alert.user_id == user_id)
-            .first()
-        )
+        alert = db.query(Alert).filter(Alert.id == alert_id, Alert.user_id == user_id).first()
         if not alert:
             return False
         alert.is_active = False
@@ -76,8 +62,7 @@ def deactivate_alert(alert_id: int, user_id: int) -> bool:
         return True
 
 
-def trigger_alert(alert_id: int):
-    """Marca alerta como disparado."""
+def trigger_alert(alert_id: int) -> None:
     with SessionLocal() as db:
         alert = db.query(Alert).filter(Alert.id == alert_id).first()
         if alert:

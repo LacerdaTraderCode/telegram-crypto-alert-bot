@@ -1,48 +1,42 @@
-"""
-Handlers dos comandos do bot.
-"""
 from telegram import Update
 from telegram.ext import ContextTypes
 
 from bot.binance_client import get_ticker_price
-from bot.database import (
-    add_alert,
-    list_user_alerts,
-    deactivate_alert,
-)
+from bot.database import add_alert, deactivate_alert, list_user_alerts
+
+
+def direction_arrow(direction: str) -> str:
+    return "⬆️" if direction == "above" else "⬇️"
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Comando /start — mensagem de boas-vindas."""
     await update.message.reply_text(
-        "👋 *Olá! Eu sou o Crypto Alert Bot*\n\n"
-        "Posso te ajudar a monitorar preços de cripto e receber alertas!\n\n"
-        "Digite /help para ver todos os comandos.",
+        "👋 *Hi! I'm the Crypto Alert Bot*\n\n"
+        "I can help you track crypto prices and receive alerts.\n\n"
+        "Type /help to see all commands.",
         parse_mode="Markdown",
     )
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Comando /help — lista os comandos."""
     help_text = (
-        "*📋 Comandos disponíveis:*\n\n"
-        "/price `<par>` — Preço atual\n"
-        "   _Exemplo: /price BTCUSDT_\n\n"
-        "/alert `<par>` `<above|below>` `<preço>` — Criar alerta\n"
-        "   _Exemplo: /alert BTCUSDT above 70000_\n\n"
-        "/alerts — Listar seus alertas ativos\n\n"
-        "/remove `<id>` — Remover alerta\n"
-        "   _Exemplo: /remove 3_\n\n"
-        "💡 *Pares mais comuns:* BTCUSDT, ETHUSDT, BNBUSDT, SOLUSDT"
+        "*📋 Available commands:*\n\n"
+        "/price `<pair>` — Current price\n"
+        "   _Example: /price BTCUSDT_\n\n"
+        "/alert `<pair>` `<above|below>` `<price>` — Create an alert\n"
+        "   _Example: /alert BTCUSDT above 70000_\n\n"
+        "/alerts — List your active alerts\n\n"
+        "/remove `<id>` — Remove an alert\n"
+        "   _Example: /remove 3_\n\n"
+        "💡 *Common pairs:* BTCUSDT, ETHUSDT, BNBUSDT, SOLUSDT"
     )
     await update.message.reply_text(help_text, parse_mode="Markdown")
 
 
 async def price_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Comando /price — consulta preço atual."""
     if not context.args:
         await update.message.reply_text(
-            "⚠️ Use: /price <par>\nExemplo: /price BTCUSDT"
+            "⚠️ Usage: /price <pair>\nExample: /price BTCUSDT",
         )
         return
 
@@ -51,8 +45,8 @@ async def price_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not data:
         await update.message.reply_text(
-            f"❌ Não consegui obter dados de *{symbol}*.\n"
-            "Verifique se o par existe (ex: BTCUSDT, ETHUSDT).",
+            f"❌ Could not fetch data for *{symbol}*.\n"
+            "Check that the pair exists (e.g. BTCUSDT, ETHUSDT).",
             parse_mode="Markdown",
         )
         return
@@ -62,7 +56,7 @@ async def price_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(
         f"💰 *{data['symbol']}*\n\n"
-        f"Preço: `${data['price']:,.4f}`\n"
+        f"Price: `${data['price']:,.4f}`\n"
         f"{emoji} 24h: `{sign}{data['change_24h']:.2f}%`\n"
         f"Volume: `{data['volume']:,.0f}`",
         parse_mode="Markdown",
@@ -70,11 +64,9 @@ async def price_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def alert_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Comando /alert — cria novo alerta."""
     if len(context.args) != 3:
         await update.message.reply_text(
-            "⚠️ Use: /alert <par> <above|below> <preço>\n"
-            "Exemplo: /alert BTCUSDT above 70000"
+            "⚠️ Usage: /alert <pair> <above|below> <price>\nExample: /alert BTCUSDT above 70000",
         )
         return
 
@@ -83,68 +75,72 @@ async def alert_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if direction not in ("above", "below"):
         await update.message.reply_text(
-            "⚠️ Direção deve ser 'above' (acima) ou 'below' (abaixo)"
+            "⚠️ Direction must be 'above' or 'below'",
         )
         return
 
     try:
         target_price = float(price_str)
     except ValueError:
-        await update.message.reply_text("⚠️ Preço inválido")
+        await update.message.reply_text("⚠️ Invalid price")
         return
 
-    # Verificar se o par existe
     data = await get_ticker_price(symbol)
     if not data:
-        await update.message.reply_text(f"❌ Par *{symbol.upper()}* não encontrado")
+        await update.message.reply_text(
+            f"❌ Pair *{symbol.upper()}* not found",
+            parse_mode="Markdown",
+        )
         return
 
     alert = add_alert(update.effective_user.id, symbol, direction, target_price)
-    arrow = "⬆️" if direction == "above" else "⬇️"
 
     await update.message.reply_text(
-        f"✅ *Alerta criado!*\n\n"
+        "✅ *Alert created!*\n\n"
         f"ID: `{alert.id}`\n"
-        f"{arrow} {alert.symbol} {direction} `${target_price:,.2f}`\n"
-        f"Preço atual: `${data['price']:,.2f}`",
+        f"{direction_arrow(direction)} {alert.symbol} {direction} `${target_price:,.2f}`\n"
+        f"Current price: `${data['price']:,.2f}`",
         parse_mode="Markdown",
     )
 
 
 async def alerts_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Comando /alerts — lista alertas do usuário."""
     user_alerts = list_user_alerts(update.effective_user.id)
 
     if not user_alerts:
         await update.message.reply_text(
-            "📭 Você não tem alertas ativos.\n\n"
-            "Crie um com: /alert BTCUSDT above 70000"
+            "📭 You have no active alerts.\n\nCreate one with: /alert BTCUSDT above 70000",
         )
         return
 
-    text = "*📋 Seus alertas ativos:*\n\n"
-    for a in user_alerts:
-        arrow = "⬆️" if a.direction == "above" else "⬇️"
-        text += f"`{a.id}` {arrow} {a.symbol} {a.direction} `${a.target_price:,.2f}`\n"
+    text = "*📋 Your active alerts:*\n\n"
+    for alert in user_alerts:
+        arrow = direction_arrow(alert.direction)
+        target = f"${alert.target_price:,.2f}"
+        text += f"`{alert.id}` {arrow} {alert.symbol} {alert.direction} `{target}`\n"
 
-    text += "\n💡 Use /remove <id> para remover um alerta"
+    text += "\n💡 Use /remove <id> to remove an alert"
     await update.message.reply_text(text, parse_mode="Markdown")
 
 
 async def remove_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Comando /remove — remove um alerta."""
     if not context.args:
-        await update.message.reply_text("⚠️ Use: /remove <id>")
+        await update.message.reply_text("⚠️ Usage: /remove <id>")
         return
 
     try:
         alert_id = int(context.args[0])
     except ValueError:
-        await update.message.reply_text("⚠️ ID inválido")
+        await update.message.reply_text("⚠️ Invalid ID")
         return
 
-    success = deactivate_alert(alert_id, update.effective_user.id)
-    if success:
-        await update.message.reply_text(f"✅ Alerta `{alert_id}` removido.", parse_mode="Markdown")
+    if deactivate_alert(alert_id, update.effective_user.id):
+        await update.message.reply_text(
+            f"✅ Alert `{alert_id}` removed.",
+            parse_mode="Markdown",
+        )
     else:
-        await update.message.reply_text(f"❌ Alerta `{alert_id}` não encontrado.", parse_mode="Markdown")
+        await update.message.reply_text(
+            f"❌ Alert `{alert_id}` not found.",
+            parse_mode="Markdown",
+        )

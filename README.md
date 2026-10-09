@@ -4,6 +4,7 @@
 
 **A Telegram bot that monitors cryptocurrency prices and sends real-time alerts**
 
+[![CI](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/LacerdaTraderCode/telegram-crypto-alert-bot/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?logo=telegram&logoColor=white)](https://core.telegram.org/bots)
 [![Binance](https://img.shields.io/badge/Binance-FCD535?logo=binance&logoColor=black)](https://binance-docs.github.io/apidocs/)
@@ -52,10 +53,25 @@ telegram-crypto-alert-bot/
 │   ├── binance_client.py    # Binance API client
 │   ├── database.py          # Alert persistence
 │   └── monitor.py           # Background monitoring job
+├── tests/
+├── .github/workflows/ci.yml
 ├── requirements.txt
+├── requirements-dev.txt
 ├── .env.example
 └── README.md
 ```
+
+---
+
+## 🧪 Development
+
+```bash
+pip install -r requirements-dev.txt
+ruff check . && ruff format --check .
+pytest -v
+```
+
+Tests mock the Binance API and Telegram objects and run against an isolated in-memory SQLite database. The same checks run on every push and pull request via GitHub Actions.
 
 ---
 
